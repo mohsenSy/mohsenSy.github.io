@@ -1,37 +1,18 @@
-## Welcome to GitHub Pages
+<img src="/assets/images/profile.jpg" />
 
-You can use the [editor on GitHub](https://github.com/mohsenSy/mohsenSy.github.io/edit/master/index.md) to maintain and preview the content for your website in Markdown files.
+## Linux Systems Administrator
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+I love working on Linux systems it has been my passion for many years.
+My favorite Linux distro is Ubuntu, I have done many tasks on Ubuntu and always looking forward for new challenges.
 
-### Markdown
+**DevOps** is my among my interests too, it is great how developers and operations team can cooperate together in
+the software delivery process to create better products for end users and deploy code more frequently to production
+environment without any bugs through a nice pipeline from *development* to *review*, *staging*, *QA* then *production*.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+This process would not be possible except for some great tools in the DevOps **tool chain** which includes:
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/mohsenSy/mohsenSy.github.io/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+* [Vagrant](https://vagrantup.com/) for local development environment which is identical between all developers.
+* [Gitlab CI](https://about.gitlab.com/features/gitlab-ci-cd/) and [Docker](https://www.docker.com) which can be used to run [Ansible](https://ansible.com) playbooks used to deploy code to different
+environments
+* [prometheus](https://prometheus.io) and [grafana](https://grafana.com) can be used to monitor our servers and
+create custom alerts.
