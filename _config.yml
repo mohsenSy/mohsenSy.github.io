@@ -1,1 +1,9 @@
+title: Mouhsen Ibrahim Site
+description: >
+  In this website I will post articles about Linux, DevOps and Database Administration
+  I am also interested in the ELK (Elasticsearch, Logstash and Kibana) stack for log anaysis.
+  I use prometheus and grafana to monitor my servers.
+base_url: ''
+show_downloads: false
+
 theme: jekyll-theme-hacker
