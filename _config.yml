@@ -5,6 +5,7 @@ description: >
   at mohsen47@hotmail.co.uk.
 base_url: ''
 show_downloads: false
+google_analytics: UA-102239605-1
 
 theme: jekyll-theme-hacker
 
