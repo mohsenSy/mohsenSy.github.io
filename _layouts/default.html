@@ -24,37 +24,28 @@
           {% endif %}
           <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on Gitub</a>
         </section>
-        <ul>
+        <div>
           {% if site.twitter_username %}
-          <li>
-            <a href="https://twitter.com/{{ site.twitter_username }}">
+            <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" style="text-decoration: none">
               <i class="fa fa-twitter"></i> Twitter
             </a>
-          </li>
           {% endif %}
           {% if site.github_username %}
-          <li>
-            <a href="https://github.com/{{ site.github_username }}">
+            <a href="https://github.com/{{ site.github_username }}" target="_blank" style="text-decoration: none">
               <i class="fa fa-github"></i> GitHub
             </a>
-          </li>
           {% endif %}
           {% if site.linkedin_username %}
-          <li>
-            <a href="https://linkedin.com/in/{{ site.linkedin_username }}">
+            <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank" style="text-decoration: none">
               <i class="fa fa-linkedin"></i> LinkedIn
             </a>
-          </li>
           {% endif %}
           {% if site.facebook_username %}
-          <li>
-            <a href="https://www.facebook.com/{{ site.facebook_username }}">
+            <a href="https://www.facebook.com/{{ site.facebook_username }}" target="_blank" style="text-decoration: none">
               <i class="fa fa-facebook"></i> Facebook
             </a>
-          </li>
           {% endif %}
-        </ul>
-      </div>
+        </div>
     </header>
 
     <div class="container">
