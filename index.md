@@ -1,3 +1,6 @@
+---
+layout: default
+---
 <img src="/assets/images/profile.jpg" />
 
 ## Linux Systems Administrator
