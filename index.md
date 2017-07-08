@@ -19,3 +19,10 @@ This process would not be possible except for some great tools in the DevOps **t
 environments
 * [prometheus](https://prometheus.io) and [grafana](https://grafana.com) can be used to monitor our servers and
 create custom alerts.
+
+Troubleshoot mysql NDB cluster issues including node failures, queries failing because of bad configuration
+and optimizing the queries by using indexes.
+
+Apply browser caching to improve user experience and currently working on using [varnish](https://varnish-cache.org) to cache resources at server side.
+
+Planning to use [memcached](https://memcached.org) with mysql cluster to cache frequent queries and improve end user's experience.
