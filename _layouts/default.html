@@ -11,7 +11,6 @@
   </head>
 
   <body>
-
     <header>
       <div class="container">
         <h1>{{ site.title | default: site.github.repository_name }}</h1>
@@ -48,11 +47,17 @@
         </div>
     </header>
 
-    <div class="container">
-      <section id="main_content">
-        {{ content }}
-      </section>
+    <div class="nav">
+      <h2>Posts</h2>
+      {% for post in site.posts %}
+        <a href="{{ post.url }}">{{ post.title }}</a>
+      {% endfor %}
     </div>
+      <div class="container">
+        <section id="main_content">
+          {{ content }}
+        </section>
+      </div>
 
     {% if site.google_analytics %}
       <script type="text/javascript">
