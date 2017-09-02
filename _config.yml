@@ -15,3 +15,4 @@ linkedin_username: mouhsen-ibrahim-670b13112/
 github_username: mohsenSy
 plugins:
   - jekyll-seo-tag
+  - jekyll-sitemap

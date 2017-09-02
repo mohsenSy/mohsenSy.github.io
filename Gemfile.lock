@@ -213,6 +213,7 @@ PLATFORMS
 DEPENDENCIES
   github-pages
   jekyll-seo-tag
+  jekyll-sitemap
 
 BUNDLED WITH
    1.15.1
