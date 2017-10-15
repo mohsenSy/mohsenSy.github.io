@@ -29,6 +29,9 @@ google_analytics: UA-102239605-1
 
 name: Mouhsen
 
+disqus:
+  shortname: mohsensy
+
 # Build settings
 markdown: kramdown
 theme: minima
