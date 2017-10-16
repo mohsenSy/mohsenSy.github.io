@@ -10,5 +10,5 @@ lectures:
 {{ page.c_name }} lectures page
 
 {% for lec in page.lectures %}
-  <a href="{{ lec.url }}">{{ lec.name }}</a>
+  <a href="{{ lec.url }}" target="_blank" >{{ lec.name }}</a>
 {% endfor %}
