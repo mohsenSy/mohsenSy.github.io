@@ -28,7 +28,9 @@ linkedin_username: mouhsen-ibrahim-670b13112/
 google_analytics: UA-102239605-1
 
 name: Mouhsen
-
+courses:
+  - name: Operating Systems 1
+    url: /OS1
 disqus:
   shortname: mohsensy
 
