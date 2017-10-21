@@ -30,7 +30,7 @@ google_analytics: UA-102239605-1
 name: Mouhsen
 courses:
   - name: Operating Systems 1
-    url: /OS1
+    url: /university/OS1
 disqus:
   shortname: mohsensy
 

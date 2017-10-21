@@ -1,7 +1,7 @@
 ---
 layout: default
 c_name: Operating Systems 1
-permalink: /OS1/
+permalink: /university/OS1/
 lectures:
   - name: lec1
     url: /assets/lectures/os1/lec1.pdf
