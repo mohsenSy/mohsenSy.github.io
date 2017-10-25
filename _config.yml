@@ -31,6 +31,8 @@ name: Mouhsen
 courses:
   - name: Operating Systems 1
     url: /university/OS1
+  - name: Multimedia Systems
+    url: /university/multimedia
 disqus:
   shortname: mohsensy
 
