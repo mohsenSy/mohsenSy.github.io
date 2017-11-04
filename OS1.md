@@ -5,6 +5,8 @@ permalink: /university/OS1/
 lectures:
   - name: lec1
     url: /assets/lectures/os1/lec1.pdf
+  - name: lec3
+    url: /assets/lectures/os1/lec3.pdf
 ---
 
 {{ page.c_name }} lectures page
