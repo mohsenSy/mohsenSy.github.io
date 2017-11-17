@@ -7,6 +7,10 @@ lectures:
     url: /assets/lectures/multimediasystems/lec2.pdf
   - name: lec3
     url: /assets/lectures/multimediasystems/lec3.pdf
+  - name: lec4
+    url: /assets/lectures/multimediasystems/lec4.pdf
+  - name: lec5
+    url: /assets/lectures/multimediasystems/lec5.pdf
 ---
 
 {{ page.c_name }} lectures page
