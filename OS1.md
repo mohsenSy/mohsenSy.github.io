@@ -11,6 +11,8 @@ lectures:
     url: /assets/lectures/os1/lec4.pdf
   - name: lec5
     url: /assets/lectures/os1/lec5.pdf
+  - name: lec6
+    url: /assets/lectures/os1/lec6.pdf
 ---
 
 {{ page.c_name }} lectures page
