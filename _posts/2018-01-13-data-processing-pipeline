@@ -15,3 +15,36 @@ it is not a trivial task at all, it needs a low latency, scalable, cost efficien
 and highly available infrastructure, in this article I will explain the requirements
 of this infrastructure and give an example of my own one which I created based
 on my three years experience of working as Linux Systems Administrator.
+
+### Introduction
+A Data Processing Pipeline can be used to store, process and analyse log data from
+applications, these logs contain many information about user activity in the application,
+errors, warnings etc...
+
+They are a valuable resource for investigating bugs and learning about user's activity
+which can be used later to improve user's experience.
+
+## infrastructure requirements for a Data Process Pipeline
+* Low Latency: When ingesting logs from the application to the system this must
+happen as quickly as possible and not delay response from the server to achieve
+this I used rabbitmq server to send logs from the application to it directly, rabbitmq
+will be ran on the same server as the application server to minimize delay.
+* Scalability: Today the application could be ingesting hundreds of logs per hour
+but in the future as the application becomes more and more famous we need the system
+to be able to scale with the increased traffic this can be achieved by using multiple
+logstash servers and apache kafka cluster to handle large amounts of logs per hour
+these tools enable the system to scale easily with increased load.
+* High Availabilty: The process of ingesting logs to the system must continue even
+in the case of a failure of some servers in the system as the failure of the system
+could cause the failure of the entire application which is unacceptable, currently
+rabbitmq failures cause the server to be remved from the application cluster, in case
+of logstash failure the logs remain in rabbitmq until it comes back online and sent
+to it, right now I have a problem with kafka failures which cause data loss however
+I will work to solve this problem soon.
+* Cost Effective: Adding more servers to existing infrastructure requires more money
+however having a Data Processing Pipeline can help greatly to react quickly to errors
+have a better idea about user's bahaviour when using the application which can be
+used in improving the areas of application where users visit more and working on
+the areas where users visit less, also when traffic increases and number of logs
+increases the company's income should increase and will be able to handle more
+costs to scale the infrastructure to handle more logs.
