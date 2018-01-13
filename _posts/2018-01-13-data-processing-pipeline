@@ -1,0 +1,17 @@
+---
+layout: post
+title:  "Data Processing Pipeline"
+date:   2018-01-13 08:58:00 +0300
+categories: sysadmin
+---
+
+Companies around the world generate large amounts of data every day, this data
+need to be stored, processed and analyzed to make sense of it, without analyzing
+the data it will not be worth generating it at all, the results of these analytics
+will be used to improve the company's products and user's experience.
+
+However generating this big amount of data, storing it, processing and analyzing
+it is not a trivial task at all, it needs a low latency, scalable, cost efficient
+and highly available infrastructure, in this article I will explain the requirements
+of this infrastructure and give an example of my own one which I created based
+on my three years experience of working as Linux Systems Administrator.
