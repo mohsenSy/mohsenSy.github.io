@@ -24,7 +24,7 @@ errors, warnings etc...
 They are a valuable resource for investigating bugs and learning about user's activity
 which can be used later to improve user's experience.
 
-## infrastructure requirements for a Data Process Pipeline
+## infrastructure requirements for a Data Processing Pipeline
 * Low Latency: When ingesting logs from the application to the system this must
 happen as quickly as possible and not delay response from the server to achieve
 this I used rabbitmq server to send logs from the application to it directly, rabbitmq
@@ -48,3 +48,64 @@ used in improving the areas of application where users visit more and working on
 the areas where users visit less, also when traffic increases and number of logs
 increases the company's income should increase and will be able to handle more
 costs to scale the infrastructure to handle more logs.
+
+## Infrastructure Description
+In this section I will describe the infrastructure used here to create the data processing
+pipeline which consists of five components, [rabbitmq](http://www.rabbitmq.com),
+[logstash](https://www.elastic.co/products/logstash), [kafka](https://kafka.apache.org),
+[elasticsearch](https://www.elastic.co/products/elasticsearch) and [kibana](https://www.elastic.co/products/kibana).
+
+Each one of these five components plays a role in achieving the requirements mentioned
+in the last section.
+
+The following steps show the data flow in the pipeline from application to visulaization
+
+1. First the application send logs to rabbitmq servers installed on the same host as the
+   application servers
+2. The log data is sent to logstash servers which converts it to JSON and sends them to
+   kafka servers for further processing.
+3. When data arrive at kafka servers it is processed using kafka streams applications, here
+   any needed changes are applied to the data for example: replace numeric IDs with Strings etc...
+4. After data is processed it is sent to its final destination elasticsearch servers to be
+   stored there and later visulized with kibana dashboards and visulaizations.
+
+Hint: I used [Confluent](https://www.confluent.io) platform to run kafka servers.
+
+In the following sections I will desribe the installation and configuration of each component
+using the proper commands.
+
+### Rabbitmq
+Rabbitmq is the most popular open source messaging software it can be used deliver messages
+from client applications to other applications, it provides low latency delivery and does
+not block the client application at all for further processing which makes it ideal for
+receiving messages from client applications at very low latency.
+
+#### Installation
+To install rabbitmq issue the following two commands:
+```
+  wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_14/rabbitmq-server_3.6.14-1_all.deb
+  sudo dpkg -i rabbitmq-server_3.6.14-1_all.deb
+```
+These two commands install rabbitmq version 3.6.14 on the server you can start the server using this command `sudo service rabbitmq start`
+
+Make sure it is up and running with the following command `sudo service rabbitmq status`
+
+#### Configuration
+After rabbitmq is installed you need to configure it first delete the guest default user with the following command
+
+`sudo rabbitmqctl delete_user guest`
+
+Now create a rabbitmq virtual host which will be used for all the configurations used here
+
+`sudo rabbitmqctl add_vhost /log`
+
+Create a user and grant it full permissions on the above virtual host
+```
+  sudo rabbitmqctl add_user logger logger_pass
+  sudo rabbitmqctl set_permissions -p /log logger ".*" ".*" ".*"
+```
+
+Next create a rabbitmq exchange which will be used to route log messages from the application
+to the appropriate queue which will be picked up later by logstash servers.
+
+`sudo `
