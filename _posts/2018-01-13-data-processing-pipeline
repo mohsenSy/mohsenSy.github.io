@@ -99,13 +99,103 @@ Now create a rabbitmq virtual host which will be used for all the configurations
 
 `sudo rabbitmqctl add_vhost /log`
 
-Create a user and grant it full permissions on the above virtual host
+Create a user and grant it full permissions on the above virtual host and give it the
+administrator tag.
 ```
   sudo rabbitmqctl add_user logger logger_pass
   sudo rabbitmqctl set_permissions -p /log logger ".*" ".*" ".*"
+  sudo rabbitmqctl set_user_tags logger administrator
+```
+
+The next step is to enable the rabbitmq management plugin so we can use rabbitmqadmin
+to create an exchange
+
+```
+  sudo rabbitmq-plugins enable rabbitmq_management
 ```
 
 Next create a rabbitmq exchange which will be used to route log messages from the application
-to the appropriate queue which will be picked up later by logstash servers.
+to the appropriate queue to be picked up later by logstash servers.
 
-`sudo `
+```
+  sudo rabbitmqadmin declare exchange name=logging type=fanout vhost=/log
+```
+
+Now we need to create a rabbitmq queue and bind it with the exchange so any messages
+sent to the exchange will be routed to it
+
+```
+  sudo rabbitmqadmin declare queue name=logs durable=true
+  sudo rabbitmqadmin declare binding source=logging destination_type=queue destination=logs
+```
+
+Now rabbitmq is ready to receive log messages from applications and send them to logstash
+servers once they are configured to read logs from rabbitmq, I will describe this in the
+next section.
+
+### logstash
+Logstash is an open source server side data processing pipeline, it can receive data
+from various inputs (rabbitmq in our case here) transform them (to JSON here) and then
+send them to various outputs (kafka in our case here).
+
+Here logstash is used to filter the required fields from each log message and send them
+to kafka topics where they are further processed before sending them finally to elasticsearch.
+
+#### Installation
+To install logstash execute these commands
+
+```
+  wget https://artifacts.elastic.co/downloads/logstash/logstash-5.6.2.deb
+  sudo dpkg -i logstash-5.6.2.deb
+```
+
+Now logstash is installed and ready to be configured.
+
+#### Configuration
+We will configure logstash using a single file to define inputs, filters and outputs.
+
+Create a new file using your favourite editor in this path `/etc/logstash/conf.d/log.conf`
+
+```
+  input {
+      rabbitmq {
+            host => "<rabbitmq_host_ip>"
+            port => 5672
+            queue => "logs"
+            durable => true
+            passive => true
+            exchange => "logging"
+            user => "logger"
+            password => "logger_pass"
+            vhost => "/log"
+      }
+}
+
+filter {
+  if [@metadata][rabbitmq_properties][datetime] {
+  date {
+        match => ["[@metadata][rabbitmq_properties][datetime]", "UNIX"]
+  }
+  }
+  json {
+        source => "%{@timestamp} - %{level_name}.%{channel} - %{context} - %{message} - %{extra}"
+  }
+}
+
+output {
+    kafka {
+          topic_id => log_topic
+          codec => "json"
+          bootstrap_servers => "<kafka_server_ip:<kafka_port>"
+    }
+}
+```
+
+From the above file we see three main sections, the first one is the **input** section
+here we are using rabbitmq input type to read messages from rabbitmq log queue.
+
+The second one is the **filter** section, here we use date filter to parse the date
+and use the json filter to convert log message to a json object using the required properties.
+
+The third one is the **output** section where we define kafka output and send messages
+to **logs_input** topic.
