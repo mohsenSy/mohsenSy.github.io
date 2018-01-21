@@ -199,3 +199,109 @@ and use the json filter to convert log message to a json object using the requir
 
 The third one is the **output** section where we define kafka output and send messages
 to **logs_input** topic.
+
+### kafka
+Kafka is used for building real-time data pipelines and streaming apps. It is
+horizontally fault-tolerant and fast, we will use [confluent](https://www.confluent.io)
+platform for running kafka server.
+
+#### Installation
+Use the following commands to install confluent platform which includes all the
+required components to run apache kafka.
+
+```
+    wget -qO - https://packages.confluent.io/deb/4.0/archive.key | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/4.0 stable main"
+    sudo apt-get update && sudo apt-get install confluent-platform-oss-2.11
+```
+
+The previous commands install confluent platform open source version on your server.
+
+You can start confluent with the following command `sudo confluent start`
+
+#### Configuration
+We will use the kafka elasticsearch connector to send data from kafka topics to
+elasticsearch servers where they are stored and can be visualized with kibana later.
+
+We need to configure kafka connect to send data from **logs_data** topic to elasticsearch
+servers, the data is already in JSON format so no need to specify any schema or
+elasticsearch mappings.
+
+Hint: Actually we must use **logs_output** topic for sending data to elasticsearch
+but this needs to implement kafka streams to process data from **logs_input** topic
+and send processed data to **logs_output** topic, we will learn how to do this in a
+later tutorial.
+
+Edit this file `/etc/kafka-connect-elasticsearch/quickstart-elasticsearch.properties`
+to specify options for kafka elasticsearch connector
+
+```
+  name=elasticsearch-sink
+  connector.class=io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
+  tasks.max=1
+  topics=logs_data
+  key.ignore=true
+  schema.ignore=true
+  connection.url=http://localhost:9200
+  type.name=kafka-connect
+  value.converter=org.apache.kafka.connect.json.JsonConverter
+  value.converter.schemas.enable=false
+```
+
+The most important option is `connection.url` which points to the elasticsearch server
+used for indexing data, the `topics` option specifies the kafka topics used as input
+for the connector, `value.converter` specifies the converter used for data here it is
+JsonConverter because data is already in JSON format and elasticsearch accepts JSON
+data by default for indexing.
+
+To start the connector use this command `sudo confluent load elasticsearch-sink`
+now the connector is up and running and any data written to `logs_data` topic will
+be indexed in elasticsearch server.
+
+To make sure that kafka elasticsearch connector is running use the following command
+
+`sudo confluent status connectors`
+
+Now after we finished installing and configuring kafka using the confluent platform
+we can move to installing and configuring elasticsearch server.
+
+### Elasticsearch
+Elasticsearch is a distributed, RESTful search and analytics engine capable of solving
+a growing number of use cases, here we use it to store our data and analyse it, without
+it our data remains **data** with no information about it and we cannot infer any results
+from it.
+
+#### Installation
+Elasticsearch can be easily installed by executing these commands
+
+```
+  wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.2.deb
+  sudo dpkg -i elasticsearch-5.6.2.deb
+```
+
+Start it with the following command `sudo service elasticsearch start`, now elasticsearch
+is up and running and ready to accept connections on port 9200.
+
+#### Configuration
+No configuration is required for elasticsearch here, more will be added in later
+tutorials for using elasticsearch in a production environment.
+
+### Kibana
+Kibana is the visulaization layer for elasticsearch, it helps to visualize and discover
+elasticsearch data easily using a web interface, you can create custom visulaizations and
+dashboards to view your data.
+
+#### Installation
+Kibana can be installed with the following commands
+
+```
+  wget https://artifacts.elastic.co/downloads/kibana/kibana-5.6.2-amd64.deb
+  sudo dpkg -i kibana-5.6.2-amd64.deb
+```
+
+#### Configuration
+One configuration option is required for kibana that is the `elasticsearch.url` in
+`/etc/kibana/kibana.yml` file, here we put the ip address and port for the elasticsearch
+server.
+
+To view kibana web interface using any web browser open `http://<kibana_host>:5601`
