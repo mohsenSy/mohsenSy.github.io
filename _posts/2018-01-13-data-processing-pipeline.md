@@ -85,10 +85,11 @@ To install rabbitmq issue the following two commands:
 ```
   wget https://github.com/rabbitmq/rabbitmq-server/releases/download/rabbitmq_v3_6_14/rabbitmq-server_3.6.14-1_all.deb
   sudo dpkg -i rabbitmq-server_3.6.14-1_all.deb
+  sudo apt-get install -fy
 ```
-These two commands install rabbitmq version 3.6.14 on the server you can start the server using this command `sudo service rabbitmq start`
+These two commands install rabbitmq version 3.6.14 on the server you can start the server using this command `sudo service rabbitmq-server start`
 
-Make sure it is up and running with the following command `sudo service rabbitmq status`
+Make sure it is up and running with the following command `sudo service rabbitmq-server status`
 
 #### Configuration
 After rabbitmq is installed you need to configure it first delete the guest default user with the following command
@@ -114,19 +115,27 @@ to create an exchange
   sudo rabbitmq-plugins enable rabbitmq_management
 ```
 
+Download rabbitmqadmin script and make it executable with the following commands
+
+```
+ sudo wget -O /usr/local/bin/rabbitmqadmin https://raw.githubusercontent.com/rabbitmq/rabbitmq-management/master/bin/rabbitmqadmin
+ sudo chmod u+x /usr/local/bin/rabbitmqadmin
+ sudo apt-get install python
+```
+
 Next create a rabbitmq exchange which will be used to route log messages from the application
 to the appropriate queue to be picked up later by logstash servers.
 
 ```
-  sudo rabbitmqadmin declare exchange name=logging type=fanout vhost=/log
+  sudo rabbitmqadmin -u logger -p logger_pass -V /log declare exchange name=logging type=fanout
 ```
 
 Now we need to create a rabbitmq queue and bind it with the exchange so any messages
 sent to the exchange will be routed to it
 
 ```
-  sudo rabbitmqadmin declare queue name=logs durable=true
-  sudo rabbitmqadmin declare binding source=logging destination_type=queue destination=logs
+  sudo rabbitmqadmin -u logger -p logger_pass -V /log declare queue name=logs durable=true
+  sudo rabbitmqadmin -u logger -p logger_pass -V /log declare binding source=logging destination_type=queue destination=logs
 ```
 
 Now rabbitmq is ready to receive log messages from applications and send them to logstash
@@ -142,7 +151,16 @@ Here logstash is used to filter the required fields from each log message and se
 to kafka topics where they are further processed before sending them finally to elasticsearch.
 
 #### Installation
-To install logstash execute these commands
+
+Before installing logstash we need to install java 8 with the following commands:
+
+```
+sudo add-apt-repository ppa:openjdk-r -y
+sudo apt-get update
+sudo apt-get install openjdk-8-jre openjdk-8-jdk -y
+```
+
+Now install logstash with these commands
 
 ```
   wget https://artifacts.elastic.co/downloads/logstash/logstash-5.6.2.deb
@@ -159,7 +177,7 @@ Create a new file using your favourite editor in this path `/etc/logstash/conf.d
 ```
   input {
       rabbitmq {
-            host => "<rabbitmq_host_ip>"
+            host => "localhost"
             port => 5672
             queue => "logs"
             durable => true
@@ -186,7 +204,7 @@ output {
     kafka {
           topic_id => log_topic
           codec => "json"
-          bootstrap_servers => "<kafka_server_ip:<kafka_port>"
+          bootstrap_servers => "localhost:9091"
     }
 }
 ```
@@ -212,7 +230,7 @@ required components to run apache kafka.
 ```
     wget -qO - https://packages.confluent.io/deb/4.0/archive.key | sudo apt-key add -
     sudo add-apt-repository "deb [arch=amd64] https://packages.confluent.io/deb/4.0 stable main"
-    sudo apt-get update && sudo apt-get install confluent-platform-oss-2.11
+    sudo apt-get update && sudo apt-get install confluent-platform-oss-2.11 -y
 ```
 
 The previous commands install confluent platform open source version on your server.
