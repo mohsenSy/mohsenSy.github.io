@@ -202,9 +202,9 @@ filter {
 
 output {
     kafka {
-          topic_id => log_topic
+          topic_id => logs_data
           codec => "json"
-          bootstrap_servers => "localhost:9091"
+          bootstrap_servers => "localhost:9092"
     }
 }
 ```
