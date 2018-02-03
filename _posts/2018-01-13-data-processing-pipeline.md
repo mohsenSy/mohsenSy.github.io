@@ -272,6 +272,8 @@ for the connector, `value.converter` specifies the converter used for data here 
 JsonConverter because data is already in JSON format and elasticsearch accepts JSON
 data by default for indexing.
 
+You need to wait few seconds to give confluent the chance to start before continuing.
+
 To start the connector use this command `sudo confluent load elasticsearch-sink`
 now the connector is up and running and any data written to `logs_data` topic will
 be indexed in elasticsearch server.
@@ -324,9 +326,117 @@ to "0.0.0.0" so you can connect to kibana web interface from anywhere.
 
 Now restart kibana for changes to take effect `sudo service kibana restart`
 
-To view kibana web interface using any web browser open `http://<kibana_host>:5601`
+To view kibana web interface using any web browser open `http://<ip_address>:5601`
 
 Now we will explain the use of a simple web application written in symfony framework
 to emit logs to our pipeline and visualize the logs in kibana.
 
 ### Web Application
+
+Now after we finished preparing the pipeline it is time to use, I created a small
+symfony application in PHP which contains a form that can be used to send log messages
+to our pipeline you can clone it using this command
+
+```
+git clone https://github.com/mohsenSy/LoggingInfrastructure.git
+```
+
+Now we must install composer, apache, php and some php extensions to make sure the app works
+
+```
+sudo apt-get install -y php apache2 libapache2-mod-php php-xml php-bcmath php-mbstring php-zip
+wget https://getcomposer.org/installer -O composer-setup.php
+sudo php composer-setup.php --filename=composer --install-dir=/usr/local/bin
+```
+
+Setup php timezone by editing `date.timezone` in `/etc/php/7.0/cli/php.ini` file
+you can set it to `Asia/Damascus` for example.
+
+Copy the application source code to apache data directory using this command
+
+```
+sudo cp -r LoggingInfrastructure/test_app /var/www/html
+```
+
+Create apache site configuration file at `/etc/apache2/sites-available/site.conf`
+with the following content
+
+```
+<VirtualHost *:80>
+
+	ServerAdmin mohsen47@hotmail.co.uk
+	DocumentRoot /var/www/html/test_app/web
+
+
+	ErrorLog ${APACHE_LOG_DIR}/test_error.log
+	CustomLog ${APACHE_LOG_DIR}/test_access.log combined
+
+
+	<Directory /var/www/html>
+                Options -Indexes
+  </Directory>
+  <Directory /var/www/html/test_app/web>
+    AllowOverride None
+    Order Allow,Deny
+    Allow from All
+		<IfModule mod_rewrite.c>
+      Options -MultiViews
+      RewriteEngine On
+	    RewriteCond %{REQUEST_FILENAME} !-f
+      RewriteRule ^(.*)$ app.php [QSA,L]
+	   </IfModule>
+  </Directory>
+	<Directory /var/www/html/test_app>
+		Options FollowSymlinks
+	</Directory>
+	<Directory /var/www/html/test_app/web/bundles>
+		<IfModule mod_rewrite.c>
+      RewriteEngine Off
+	   </IfModule>
+	</Directory>
+</VirtualHost>
+
+# vim: syntax=apache ts=4 sw=4 sts=4 sr noet
+```
+Now we must run composer to install symfony and its dependencies to vendor directory
+
+```
+cd /var/www/html/test_app
+sudo composer install -n
+sudo mkdir var/sessions
+sudo chown -R www-data:www-data var/cache
+sudo chown -R www-data:www-data var/logs
+sudo chown -R www-data:www-data var/sessions
+```
+
+Enable apache2 rewrite module and site
+
+```
+sudo a2enmod rewrite
+sudo a2ensite site
+sudo service apache2 restart
+```
+
+Now the application is up and running you can use it by visiting this url in
+your browser `http://<ip_address>/app_dev.php/test` this page shows a form with
+one input enter your name for example in the field then browse to kibana for
+viewing the message you entered as described in next section.
+
+### Kibana Index Pattern
+Kibana is used to visualize elasticsearch indexes so the first thing you need to do
+is create an index pattern which contains the name of index you want to visualize.
+
+Open kibana main interface `http://<ip_address>:5601`
+
+![kibana_main_interface]({{ site.url }}/assets/images/kibana_main_interface.jpg)
+
+In the index pattern field enter `logs_data` then click create, now you can browse
+the data in your index in the `Discover` tab at the left of the screen.
+
+At the top of the page there is a search bar you can enter `message:"hello"` in
+the search bar to find all log records that contain hello in the message field,
+you can experiment with sending logs with different messages and searching for
+them in kibana web interface.
+
+This guide will not describe how to use kibana for more information check [kibana
+documentation](https://www.elastic.co/guide/en/kibana/5.6/index.html).
