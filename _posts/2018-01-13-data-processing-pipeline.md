@@ -318,8 +318,15 @@ Kibana can be installed with the following commands
 ```
 
 #### Configuration
-One configuration option is required for kibana that is the `elasticsearch.url` in
-`/etc/kibana/kibana.yml` file, here we put the ip address and port for the elasticsearch
-server.
+
+Open the file `/etc/kibana/kibana.yml` and edit the `server.host` option, set it
+to "0.0.0.0" so you can connect to kibana web interface from anywhere.
+
+Now restart kibana for changes to take effect `sudo service kibana restart`
 
 To view kibana web interface using any web browser open `http://<kibana_host>:5601`
+
+Now we will explain the use of a simple web application written in symfony framework
+to emit logs to our pipeline and visualize the logs in kibana.
+
+### Web Application
