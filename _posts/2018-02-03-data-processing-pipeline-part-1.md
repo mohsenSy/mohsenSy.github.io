@@ -1,7 +1,7 @@
 ---
 layout: post
-title:  "Data Processing Pipeline"
-date:   2018-01-13 08:58:00 +0300
+title:  "Data Processing Pipeline part 1"
+date:   2018-02-03 18:57:00 +0300
 categories: sysadmin
 ---
 
@@ -24,11 +24,11 @@ errors, warnings etc...
 They are a valuable resource for investigating bugs and learning about user's activity
 which can be used later to improve user's experience.
 
-## infrastructure requirements for a Data Processing Pipeline
+## Infrastructure requirements for Data Processing Pipeline
 * Low Latency: When ingesting logs from the application to the system this must
 happen as quickly as possible and not delay response from the server to achieve
 this I used rabbitmq server to send logs from the application to it directly, rabbitmq
-will be ran on the same server as the application server to minimize delay.
+will be running on the same server as the application server to minimize delay.
 * Scalability: Today the application could be ingesting hundreds of logs per hour
 but in the future as the application becomes more and more famous we need the system
 to be able to scale with the increased traffic this can be achieved by using multiple
@@ -56,7 +56,7 @@ pipeline which consists of five components, [rabbitmq](http://www.rabbitmq.com),
 [elasticsearch](https://www.elastic.co/products/elasticsearch) and [kibana](https://www.elastic.co/products/kibana).
 
 Each one of these five components plays a role in achieving the requirements mentioned
-in the last section.
+in the above section.
 
 The following steps show the data flow in the pipeline from application to visulaization
 
@@ -71,8 +71,8 @@ The following steps show the data flow in the pipeline from application to visul
 
 Hint: I used [Confluent](https://www.confluent.io) platform to run kafka servers.
 
-In the following sections I will desribe the installation and configuration of each component
-using the proper commands.
+In the following sections I will describe the installation and configuration of
+each component on a single server using the proper commands.
 
 ### Rabbitmq
 Rabbitmq is the most popular open source messaging software it can be used deliver messages
@@ -120,7 +120,6 @@ Download rabbitmqadmin script and make it executable with the following commands
 ```
  sudo wget -O /usr/local/bin/rabbitmqadmin https://raw.githubusercontent.com/rabbitmq/rabbitmq-management/master/bin/rabbitmqadmin
  sudo chmod u+x /usr/local/bin/rabbitmqadmin
- sudo apt-get install python
 ```
 
 Next create a rabbitmq exchange which will be used to route log messages from the application
@@ -210,13 +209,36 @@ output {
 ```
 
 From the above file we see three main sections, the first one is the **input** section
-here we are using rabbitmq input type to read messages from rabbitmq log queue.
+here we are using rabbitmq input type to read messages from rabbitmq queue.
 
 The second one is the **filter** section, here we use date filter to parse the date
 and use the json filter to convert log message to a json object using the required properties.
 
 The third one is the **output** section where we define kafka output and send messages
-to **logs_input** topic.
+to **logs_data** topic.
+
+### Elasticsearch
+Elasticsearch is a distributed, RESTful search and analytics engine capable of solving
+a growing number of use cases, here we use it to store our data and analyse it, without
+it our data remains **data** with no information about it and we cannot infer any results
+from it.
+
+#### Installation
+Elasticsearch can be easily installed by executing these commands
+
+```
+  wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.2.deb
+  sudo dpkg -i elasticsearch-5.6.2.deb
+```
+
+Start it with the following command `sudo service elasticsearch start`, now elasticsearch
+is up and running and ready to accept connections on port 9200.
+
+#### Configuration
+If your server runs on 4 GB of memory you need to modify the heap size for elasticsearch
+to be able to run other components together, open the file `/etc/elasticsearch/jvm.options`
+and change `-Xms2g` and `-Xmx2g` to `-Xms1g` and `-Xmx1g` respectively then restart elasticsearch
+with this command `sudo service elasticsearch restart`.
 
 ### kafka
 Kafka is used for building real-time data pipelines and streaming apps. It is
@@ -244,11 +266,6 @@ elasticsearch servers where they are stored and can be visualized with kibana la
 We need to configure kafka connect to send data from **logs_data** topic to elasticsearch
 servers, the data is already in JSON format so no need to specify any schema or
 elasticsearch mappings.
-
-Hint: Actually we must use **logs_output** topic for sending data to elasticsearch
-but this needs to implement kafka streams to process data from **logs_input** topic
-and send processed data to **logs_output** topic, we will learn how to do this in a
-later tutorial.
 
 Edit this file `/etc/kafka-connect-elasticsearch/quickstart-elasticsearch.properties`
 to specify options for kafka elasticsearch connector
@@ -285,27 +302,6 @@ To make sure that kafka elasticsearch connector is running use the following com
 Now after we finished installing and configuring kafka using the confluent platform
 we can move to installing and configuring elasticsearch server.
 
-### Elasticsearch
-Elasticsearch is a distributed, RESTful search and analytics engine capable of solving
-a growing number of use cases, here we use it to store our data and analyse it, without
-it our data remains **data** with no information about it and we cannot infer any results
-from it.
-
-#### Installation
-Elasticsearch can be easily installed by executing these commands
-
-```
-  wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.6.2.deb
-  sudo dpkg -i elasticsearch-5.6.2.deb
-```
-
-Start it with the following command `sudo service elasticsearch start`, now elasticsearch
-is up and running and ready to accept connections on port 9200.
-
-#### Configuration
-No configuration is required for elasticsearch here, more will be added in later
-tutorials for using elasticsearch in a production environment.
-
 ### Kibana
 Kibana is the visulaization layer for elasticsearch, it helps to visualize and discover
 elasticsearch data easily using a web interface, you can create custom visulaizations and
@@ -333,7 +329,7 @@ to emit logs to our pipeline and visualize the logs in kibana.
 
 ### Web Application
 
-Now after we finished preparing the pipeline it is time to use, I created a small
+Now after we finished preparing the pipeline it is time to use it, I created a small
 symfony application in PHP which contains a form that can be used to send log messages
 to our pipeline you can clone it using this command
 
@@ -344,7 +340,7 @@ git clone https://github.com/mohsenSy/LoggingInfrastructure.git
 Now we must install composer, apache, php and some php extensions to make sure the app works
 
 ```
-sudo apt-get install -y php apache2 libapache2-mod-php php-xml php-bcmath php-mbstring php-zip
+sudo apt-get install -y php5 apache2 libapache2-mod-php5 git
 wget https://getcomposer.org/installer -O composer-setup.php
 sudo php composer-setup.php --filename=composer --install-dir=/usr/local/bin
 ```
@@ -414,6 +410,7 @@ Enable apache2 rewrite module and site
 ```
 sudo a2enmod rewrite
 sudo a2ensite site
+sudo a2dissite 000-default.conf
 sudo service apache2 restart
 ```
 
@@ -440,3 +437,43 @@ them in kibana web interface.
 
 This guide will not describe how to use kibana for more information check [kibana
 documentation](https://www.elastic.co/guide/en/kibana/5.6/index.html).
+
+#### Expected issues
+If you are experiencing any errors you can make sure that all components are running
+with these commands:
+
+```
+sudo service rabbitmq-server status
+sudo service logstash status
+sudo confluent log connect
+sudo service elasticsearch status
+sudo service kibana status
+```
+
+The third command shows the output of kafka-connect service if you can see any errors
+just reload kafka-connect-elasticsearch with these two commands
+
+```
+sudo confluent unload elasticsearch-sink
+sudo confluent load elasticsearch-sink
+```
+
+If you are still experiencing any issues please leave a comment below or contact
+me at [mohsen47@hotmail.co.uk](mailto:mohsen47@hotmail.co.uk) and I will be very
+happy to help you.
+
+#### Future Work
+This is only an alpha version of my work I will be working to fix all issues and
+improve this infrastructure in the near future, my current plans include:
+* Fix data loss when apache kafka is down, I noticed that data is lost when kafka
+server is disconnected for any reason, I will be investigating this bug very soon
+and release a solution in the near future.
+* Enable processing of data at apache kafka topics before they are sent to elasticsearch
+I will use Kafka streams API to process data, this processing may include replacing
+numeric user IDs with real user names from the password or doing any calculation
+on the data.
+* Investigate the scalability of the system and propose using it in a real web application
+running behind a load balancer.
+* Describe deployment with ansible playbook.
+
+Any issues or suggestion are welcome on my github repository [issue tracker](https://github.com/mohsenSy/LoggingInfrastructure/issues).
