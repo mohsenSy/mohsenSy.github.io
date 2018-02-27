@@ -327,6 +327,7 @@ To view kibana web interface using any web browser open `http://<ip_address>:560
 Now we will explain the use of a simple web application written in symfony framework
 to emit logs to our pipeline and visualize the logs in kibana.
 
+<a name="web_app" />
 ### Web Application
 
 Now after we finished preparing the pipeline it is time to use it, I created a small
@@ -419,6 +420,7 @@ your browser `http://<ip_address>/app_dev.php/test` this page shows a form with
 one input enter your name for example in the field then browse to kibana for
 viewing the message you entered as described in next section.
 
+<a name="kibana_index_pattern" />
 ### Kibana Index Pattern
 Kibana is used to visualize elasticsearch indexes so the first thing you need to do
 is create an index pattern which contains the name of index you want to visualize.
