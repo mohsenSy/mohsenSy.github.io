@@ -33,6 +33,8 @@ courses:
     url: /university/OS1
   - name: Multimedia Systems
     url: /university/multimedia
+  - name: Distributed Applications
+    url: /university/distributed_applications
 disqus:
   shortname: mohsensy
 
