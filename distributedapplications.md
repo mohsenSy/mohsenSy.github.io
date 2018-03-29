@@ -7,6 +7,8 @@ lectures:
     url: /assets/lectures/distributed_applications/session1.zip
   - name: lec2
     url: /assets/lectures/distributed_applications/session2.zip
+  - name: homework1
+    url: /assets/lectures/distributed_applications/homework1.pdf
 
 ---
 
