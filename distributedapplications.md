@@ -13,6 +13,8 @@ lectures:
     url: /assets/lectures/distributed_applications/session3.zip
   - name: chat
     url: /assets/lectures/distributed_applications/chat.zip
+  - name: lec5
+    url: /assets/lectures/distributed_applications/session5.zip
 
 ---
 
