@@ -35,6 +35,8 @@ courses:
     url: /university/multimedia
   - name: Distributed Applications
     url: /university/distributed_applications
+  - name: Distributed Applications 2019
+    url: /university/distributed_applications_2019
 disqus:
   shortname: mohsensy
 
