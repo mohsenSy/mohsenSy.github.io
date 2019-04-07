@@ -9,8 +9,8 @@ lectures:
     url: /assets/lectures/distributed_applications_2019/session2.zip
   - name: session3
     url: /assets/lectures/distributed_applications_2019/session3.zip
-  - name: session3
-    url: /assets/lectures/distributed_applications_2019/session3.zip
+  - name: session4
+    url: /assets/lectures/distributed_applications_2019/session4.pdf
 ---
 
 {{ page.c_name }} sessions page
