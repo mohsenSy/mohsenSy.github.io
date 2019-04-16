@@ -13,6 +13,8 @@ lectures:
     url: /assets/lectures/distributed_applications_2019/session4.pdf
   - name: homework1
     url: /assets/lectures/distributed_applications_2019/homework1.zip
+  - name: session5
+    url: /assets/lectures/distributed_applications_2019/session5.zip
 ---
 
 {{ page.c_name }} sessions page
