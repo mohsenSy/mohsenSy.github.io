@@ -17,6 +17,8 @@ lectures:
     url: /assets/lectures/distributed_applications_2019/session5.zip
   - name: session6
     url: /assets/lectures/distributed_applications_2019/session6.zip
+  - name: session7
+    url: /assets/lectures/distributed_applications_2019/session7.zip
 ---
 
 {{ page.c_name }} sessions page
