@@ -99,7 +99,7 @@ can use your own email and password, these are used to access pgadmin web interf
 I prefer to save an alias for this long docker command, put your aliases here `~/.bash_aliases`.
 
 ```
-alias pgadmin = "docker run --name pgadmin --rm -p 8080:80 -e PGADMIN_DEFAULT_EMAIL=mohsen47@hotmail.co.uk -e PGADMIN_DEFAULT_PASSWORD=asdfgh dpage/pgadmin4"
+alias pgadmin='docker run --name pgadmin --rm -p 8080:80 -e PGADMIN_DEFAULT_EMAIL=mohsen47@hotmail.co.uk -e PGADMIN_DEFAULT_PASSWORD=asdfgh dpage/pgadmin4'
 ```
 
 Make sure this file is sourced by `~/.bashrc` if it exists using this code:
