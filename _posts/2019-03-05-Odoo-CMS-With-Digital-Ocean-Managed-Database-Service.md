@@ -3,6 +3,7 @@ layout: post
 title:  "using Odoo CRM with Digital Ocean Managed Databases"
 date:   2019-03-05 21:51:00 +0300
 categories: sysadmin, cloud
+summary: This tutorial describes how to install Odoo on Digital Ocean droplet and connect it to DO Managed Database.
 ---
 
 In my previous [article]({% post_url 2019-02-26-My-thoughts-about-Digital-Ocean-managed-database %}) I talked about Digital Ocean Managed Database service and

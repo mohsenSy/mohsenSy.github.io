@@ -3,6 +3,7 @@ layout: post
 title:  "Vagrant Packer Tutorial"
 date:   2018-07-24 23:55:00 +0300
 categories: sysadmin
+summary: In this tutorial you will learn how to create a new vagrant box using packer and virtualbox.
 ---
 
 ## Introduction to Vagrant

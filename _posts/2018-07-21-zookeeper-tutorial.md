@@ -3,6 +3,7 @@ layout: post
 title:  "zookeeper tutorial"
 date:   2018-07-21 23:17:00 +0300
 categories: sysadmin
+summary: In this tutorial you will learn the basics of ZooKeeper and how you can access it using java client.
 ---
 
 Introduction to ZooKeeper

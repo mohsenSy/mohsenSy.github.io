@@ -3,6 +3,7 @@ layout: post
 title:  "Data Processing Pipeline part 1"
 date:   2018-02-03 18:57:00 +0300
 categories: sysadmin
+summary: In this article I describe my own data processing pipeline which uses rabbitmq, logstash, elasticsearch, kafka and kibana for stream processing
 ---
 
 Companies around the world generate large amounts of data every day, this data

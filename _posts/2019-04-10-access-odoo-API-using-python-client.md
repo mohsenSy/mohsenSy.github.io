@@ -3,6 +3,7 @@ layout: post
 title:  "Access Odoo API using python client"
 date:   2019-04-10 18:00:00 +0300
 categories: development
+summary: Here I will describe how to access and use Odoo API using the python client.
 ---
 
 In a previous article I talked about installing Odoo on DO droplet using docker-compose

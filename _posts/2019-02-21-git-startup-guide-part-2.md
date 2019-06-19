@@ -3,6 +3,7 @@ layout: post
 title:  "Git startup guide part 2"
 date:   2019-02-21 21:30:00 +0300
 categories: developer-tools
+summary: This is part 2 of git startup guide series
 ---
 
 This is part 2 of the git guide series, you can find the first part [here]({% post_url 2017-09-01-git-startup-guide-part-1 %}), this part came late :( I know but I will not

@@ -3,6 +3,7 @@ layout: post
 title:  "ELK Migration Tutorial"
 date:   2018-06-22 23:42:00 +0300
 categories: sysadmin
+summary: In this tutorial I describe how to migrate ELK cluster version 5.6 to version 6.3
 ---
 
 ## An introduction to elasticsearch

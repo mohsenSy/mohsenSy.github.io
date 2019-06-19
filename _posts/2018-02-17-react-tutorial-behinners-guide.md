@@ -3,6 +3,7 @@ layout: post
 title:  "React Tutorial - Beginner Guide"
 date:   2018-02-17 21:20:00 +0300
 categories: web-development
+summary: This is part 1 of my react basics tutorial series
 ---
 
 What is React

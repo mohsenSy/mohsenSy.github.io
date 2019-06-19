@@ -3,6 +3,7 @@ layout: post
 title:  "Bootstrap with React"
 date:   2019-06-17 01:02:00 +0300
 categories: developer
+summary: This tutorial describes how to use Bootstrap in React projects.
 ---
 
 # Introduction

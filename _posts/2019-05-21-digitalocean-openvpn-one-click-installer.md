@@ -3,6 +3,7 @@ layout: post
 title:  "Connect to Digital Ocean one click openvpn server using GUI from Ubuntu"
 date:   2019-05-21 20:21:00 +0300
 categories: sysadmin
+summary: This tutorial is about connecting to Digital Ocean one click OpenVPN Access Server from Ubuntu GUI.
 ---
 
 # Introduction

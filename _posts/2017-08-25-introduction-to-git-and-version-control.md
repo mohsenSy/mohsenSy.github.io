@@ -3,6 +3,7 @@ layout: post
 title:  "Introduction to git and version control"
 date:   2017-08-26 00:12:00 +0300
 categories: developer-tools
+summary: "In this tutorial you will learn the basics of Git version control system"
 ---
 
 # An intro to git and version control

@@ -3,6 +3,7 @@ layout: post
 title:  "Git startup guide part 1"
 date:   2017-09-01 22:53:00 +0300
 categories: developer-tools
+summary: This is part of git tutorial series to learn the most widely used version control system
 ---
 
 # Introduction

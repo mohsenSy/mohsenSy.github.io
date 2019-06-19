@@ -3,6 +3,7 @@ layout: post
 title:  "My thoughts about Digital Ocean managed database"
 date:   2019-02-26 00:49:00 +0300
 categories: sysadmin, cloud
+summary: After Digital Ocean released its new database service I describe the service here and how it can be used.
 ---
 
 On 14 February 2019, Digital Ocean released a new service called managed database

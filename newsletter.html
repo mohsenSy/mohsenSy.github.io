@@ -1,0 +1,9 @@
+---
+layout: newsletter
+---
+
+{% for post in site.posts limit:6 %}
+<h2>{{post.title}}</h2>
+<p>{{post.summary}} <a href="{{post.url}}">Read more &raquo;</a></p>
+
+{% endfor %}

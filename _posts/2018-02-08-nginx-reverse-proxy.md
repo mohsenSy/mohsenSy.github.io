@@ -3,6 +3,7 @@ layout: post
 title:  "Nginx as a reverse proxy"
 date:   2018-02-08 16:16:00 +0300
 categories: sysadmin
+summary: Here I will describe the use of nginx server as a reverse proxy for your backend applications
 ---
 
 ## What is a Reverse Proxy?

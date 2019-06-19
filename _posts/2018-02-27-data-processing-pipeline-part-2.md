@@ -3,6 +3,7 @@ layout: post
 title:  "Data Processing Pipeline part 2"
 date:   2018-02-27 18:08:00 +0300
 categories: sysadmin
+summary: Here I continue on my own data processing pipeline project and describe how to install its components using ansible
 ---
 
 In the [previous part]({{ site.url }}/sysadmin/2018/02/03/data-processing-pipeline-part-1.html)

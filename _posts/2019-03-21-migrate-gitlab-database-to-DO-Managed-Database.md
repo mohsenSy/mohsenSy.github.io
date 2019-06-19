@@ -3,6 +3,7 @@ layout: post
 title:  "Migrate gitlab to use DO Managed Database Cluster"
 date:   2019-03-21 23:55:00 +0300
 categories: sysadmin, cloud
+summary: This article is about moving my gitlab database to DO Managed Database cluster.
 ---
 
 [Gitlab](https://gitlab.com/) is definitely the best git server out there, it gathers

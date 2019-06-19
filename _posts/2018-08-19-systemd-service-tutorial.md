@@ -3,6 +3,7 @@ layout: post
 title:  "Systemd Service tutorial"
 date:   2018-08-19 16:50:00 +0300
 categories: sysadmin
+summary: This tutorial teaches some basics of systemd and how to create a new service for it.
 ---
 
 In this tutorial we will learn how create a service file to run a script as a service
