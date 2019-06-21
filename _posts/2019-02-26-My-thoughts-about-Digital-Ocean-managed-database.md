@@ -66,11 +66,8 @@ one master node you chose earlier, this can take some time.
 Meanwhile the cluster is provisioning you can check the getting started guide, click
 on `Get started`, the first thing you will configure here is the inbound sources allowed
 to access the database, for now we will leave it empty HOWEVER this is strongly unrecommeneded
-for a real production server, also TAKE NOTE that if you need to configure your cluster
-to allow access from your droplets you need to use their public IP addresses not the
-private ones because the new service does not integrate yet with private networking service
-and any access to the cluster must happen using the public IP addresses, but do not worry
-too much your traffic is encrypted.
+for a real production server. If you enable private networking for the cluster you can
+use private IP addresses of the droplets if they are in the same data center.
 
 Click on `Continue, I'll do this later`, now is the time to copy your database access
 credentials which include username, password, host, port and database.
@@ -159,9 +156,6 @@ thoughts about the new service
   be great if we can for example send the cluster logs to a logstash endpoint using
   file beat compatible format so we can integrate ELK stack with the cluster.
 * I did not test the backup service yet, I will do this in a future post.
-
-One final thing, enabling access to the cluster using private IP addresses is very
-important to ensure secure access to the cluster from out droplets.
 
 Thanks a lot for Digital Ocean for this new service and will be waiting for more.
 
