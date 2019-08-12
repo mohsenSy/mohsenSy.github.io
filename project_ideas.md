@@ -29,7 +29,7 @@ Here I will post project ideas for graduation and semester projects in Informati
   and create a web interface to index data into Solr and search into indexed data, it is preferable to use Python for the web
   interface. **difficulty 7/10**
 * **Chat application** In this project we will build a fast and scalable chat app using micro-services, this app will have the ability
-  to create private and group chats with user profiles and additional features to help development teams communicate with each other. **difficulty 7/10**
+  to create private and group chats with user profiles and additional features to help development teams communicate with each other. **difficulty 7/10** *not available*
 * **Web interface for DPI** [Deep Packet Inspection](https://www.ntop.org/products/deep-packet-inspection/ndpi/) works on analyzing network packets and extracting information
 from them, in this project we will build a python module for inspecting some common application protocol packets such as HTTP, DNS, etc... and API to use the module and a web
 interface that calls the API, at the end we will have a web application for reading pcap files and displaying them in a web browser interface. **difficulty 7/10**
