@@ -1,0 +1,352 @@
+---
+layout: post
+title:  "Echo server and client using sockets in c"
+date:   2019-09-25 21:51:00 +0300
+categories: programming
+summary: Here I will create an echo server and client using sockets in c with help from build tools
+---
+
+# Introduction
+This will be the first of a series of articles that help programmers create high performance network application serves
+that implement some common network application protocols and also some custom created ones to demonstrate the basic
+features in creating network application servers, all servers will be performance tested using [locustio](https://locust.io)
+and sometimes compared with real world servers.
+
+Also we will use our own clients to communicate with real servers and real clients to communicate with our servers
+to check for the correct operation of our own work, all programming will be done using C programming language with some
+clients created using python for testing in locustio framework.
+
+Why C?
+======
+First C is definitely not a dying language as you might expect, C is still used in many software projects, the most notable
+project in C is the Linux Kernel with millions of lines of code written in C.
+
+C is used for very high performance software that needs to take full advantage of the available hardware to increase its performance,
+it offers very little protection to its programmers in exchange for high performance, other programming languages offer a lot of protection
+which decreases performance, C is a compiled language that runs directly on hardware without using any virtual machines as Java does.
+
+You can control many aspects of C programs such as the ability to store variables in CPU registers without storing them in memory
+which greatly increases performance of programs, the ability to inline some basic functions which removes the overhead of saving CPU registers
+when calling a function but at the same time enable programmers to use simple functions to do common tasks, in C you can access any memory
+location you want using pointers however trying to access memory locations outside program's memory will cause a segmentation fault and stop
+the program.
+
+If you wanted to use a high level programming language and at the same time get a high performance I recommend using [golang](https://golang.org)
+from google, its creators - google - say it is as fast as C and as beautiful as Python, and many high performance software are already
+created using it such as [caddy](https://caddyserver.com) which is a high performance web server, [kubernetes](https://kubernetes.io) which is a
+docker orchestrator software.
+
+# Preparing the environment
+To follow along with this article and the next ones you need the following:
+* [conan](https://conan.io) A package manager for C/C++ projects.
+* [cmake](https://cmake.org) An open source, multi-platform build tool that can be used in C/C++ projects.
+* A linux machine either virtual or physical, you can have any distribution you want, however here I will be using Ubuntu 18.04 Desktop.
+* A text editor, it can be default gedit which comes with Ubuntu or the preferred [atom](https://atom.io) editor.
+
+We will get started by creating a very simple hello world C application with help from conan and cmake.
+
+# Hello World C program with conan and cmake
+After conan and cmake are installed and ready for use create a new folder called `sockets` where you want to put your source code, and create these
+two directories inside it `src` and `build` along with these two files `conanfile.txt` and `CMakeLists.txt`.
+
+```
+.
+├── build
+├── CMakeLists.txt
+├── conanfile.txt
+└── src
+
+2 directories, 2 files
+```
+
+The `src` directory will hold our program's source code, `build` will contain generated binaries and libraries along with
+Makefiles for compiling source code to binary files.
+
+The file `conanfile.txt` is an INI file that contains the names of packages our application depends on them, in this case
+our program does not depend on any external libraries or packages, and also a list of generators that create the right
+configuration file for cmake to work properly and link with used libraries.
+
+The file `CMakeLists.txt` is a very basic configuration file for cmake that includes the conan generated file along with
+some instructions to create the binaries we need in our program, one for the server and the other for the client.
+
+Start by creating a new file called `main.c` in `src` directory, with this content.
+
+```c
+#include <stdio.h>
+
+int main(int argc, char const *argv[]) {
+
+  printf("Hello world in C\n");
+
+  return 0;
+}
+```
+
+This is a very basic program in C.
+
+Now add this content to `conanfile.txt`
+
+```
+[generators]
+cmake
+```
+
+We specify a single generator called `cmake`, now change to the build directory and execute this command:
+
+```
+conan install ..
+```
+After this command you will see five new files in `build` directory, these files are autogenerated by conan,
+we do not need to touch or change these files at all, the most important one of them is `conanbuildinfo.cmake`
+if you open this file and look at its contents you will see a lot of cmake instructions that were generated by conan
+according to your configuration, if you did not use conan you would probably need to write many of these by hand, hard right?
+
+Now let us get back to the other file called `CMakeLists.txt` it has the following content
+
+```
+cmake_minimum_required(VERSION 2.8.12)
+project(csockets)
+
+include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+conan_basic_setup()
+
+
+add_executable(ctest src/main.c)
+
+target_link_libraries(ctest ${CONAN_LIBS})
+```
+
+These are only 6 lines of code, that is better than the many lines found in `conanbuildinfo.cmake` and easier to use, we will
+explain each of these lines now:
+* The first one specifies that we need at least version 2.8.12 of cmake to run this program.
+* The second lines gives a name to the project `csockets`, it could be any name.
+* The third line is very important one, here we include all the code in the file `conanbuildinfo.cmake` as if it was written here, perfect :)
+* The fourth line calls the function `conan_basic_setup` which is defined in `conanbuildinfo.cmake`.
+* The fifth line defines a new executable to be created with the name of `ctest` and created form the file `src/main.c`
+* The last line makes sure that any libraries defined in conan are linked with the new executable so we can use them easily, for
+  now we do not have libraries in conan but when we add them later they will be linked automatically.
+
+Now inside the build directory execute this command:
+
+```
+cmake ..
+```
+
+Many new files and directories are created after the last command, we do not need to touch any of them, now to create the executable we defined
+earlier just execute this command
+
+```
+make
+```
+
+You will  see a new file in the `bin` directory called `ctest`, if you try to execute this file you will get the desired output
+from the program you wrote earlier on, to execute use this command
+
+```
+bin/ctest
+```
+
+If you make any changes to the source code just execute `make` to generate new binaries, if you change `CMakeLists.txt` file
+execute `cmake ..` for new changes to take effect, if you change `conanfile.txt` file execute this command `conan install ..`
+for new changes to take effect.
+
+Now you have a simple program in C that is managed by conan and cmake easily, we will move to the part of creating an echo server and client.
+
+# Echo server
+
+To create a server we need first to add these two lines to `CMakeLists.txt` file
+
+```
+add_executable(server src/server.c)
+target_link_libraries(server ${CONAN_LIBS})
+```
+
+These instruct cmake to create an executable binary called `sever` for the file `src/server.c` and link any conan libraries with it.
+
+The contents for `src/server.c` are as follows:
+
+```c
+#include <stdio.h> // perror, printf
+#include <stdlib.h> // exit, atoi
+#include <unistd.h> // read, write, close
+#include <arpa/inet.h> // sockaddr_in, AF_INET, SOCK_STREAM, INADDR_ANY, socket etc...
+#include <string.h> // memset
+
+int main(int argc, char const *argv[]) {
+
+  int serverFd, clientFd;
+  struct sockaddr_in server, client;
+  int len;
+  int port = 1234;
+  char buffer[1024];
+  if (argc == 2) {
+    port = atoi(argv[1]);
+  }
+  serverFd = socket(AF_INET, SOCK_STREAM, 0);
+  if (serverFd < 0) {
+    perror("Cannot create socket");
+    exit(1);
+  }
+  server.sin_family = AF_INET;
+  server.sin_addr.s_addr = INADDR_ANY;
+  server.sin_port = htons(port);
+  len = sizeof(server);
+  if (bind(serverFd, (struct sockaddr *)&server, len) < 0) {
+    perror("Cannot bind sokcet");
+    exit(2);
+  }
+  if (listen(serverFd, 10) < 0) {
+    perror("Listen error");
+    exit(3);
+  }
+  while (1) {
+    len = sizeof(client);
+    printf("waiting for clients\n");
+    if ((clientFd = accept(serverFd, (struct sockaddr *)&client, &len)) < 0) {
+      perror("accept error");
+      exit(4);
+    }
+    char *client_ip = inet_ntoa(client.sin_addr);
+    printf("Accepted new connection from a client %s:%d\n", client_ip, ntohs(client.sin_port));
+    memset(buffer, 0, sizeof(buffer));
+    int size = read(clientFd, buffer, sizeof(buffer));
+    if ( size < 0 ) {
+      perror("read error");
+      exit(5);
+    }
+    printf("received %s from client\n", buffer);
+    if (write(clientFd, buffer, size) < 0) {
+      perror("write error");
+      exit(6);
+    }
+    close(clientFd);
+  }
+  close(serverFd);
+  return 0;
+}
+```
+
+We will briefly describe the functions used:
+
+* socket: This function is used to create a socket which is used later for reading and writing from/to network.
+* bind: This function binds the created socket with an IP address and port on the server, for the port we chose
+  1234 and the IP address used is `INADDR_ANY` which means you can use any IP address on the server to receive new clients.
+* listen: This function instructs the socket to listen to new connection requests with a backlog parameter that defines
+  the number of allowed pending sockets before new connections are refused.
+* accept: This function returns a new socket that can be used to serve new clients
+* read/write: These functions are used to read data from a socket or write data to it.
+* close: This function closes the connection and the socket.
+
+To run this server we execute these two commands
+
+```
+make
+bin/server
+```
+
+The first one compiles the source code and creates a binary file called `server` and the second one runs the server.
+
+# Echo client
+
+To create the client we use a similar procedure, first add these two lines to `CMakeLists.txt`
+
+```
+add_executable(client src/client.c)
+target_link_libraries(client ${CONAN_LIBS})
+```
+
+We create a new file in `src` directory called `client.c` with this content:
+
+```c
+#include <stdio.h> // perror, printf
+#include <stdlib.h> // exit, atoi
+#include <unistd.h> // write, read, close
+#include <arpa/inet.h> // sockaddr_in, AF_INET, SOCK_STREAM, INADDR_ANY, socket etc...
+#include <string.h> // strlen, memset
+
+const char message[] = "Hello sockets world\n";
+
+int main(int argc, char const *argv[]) {
+
+  int serverFd;
+  struct sockaddr_in server;
+  int len;
+  int port = 1234;
+  char *server_ip = "127.0.0.1";
+  char *buffer = "hello server";
+  if (argc == 3) {
+    server_ip = argv[1];
+    port = atoi(argv[2]);
+  }
+  serverFd = socket(AF_INET, SOCK_STREAM, 0);
+  if (serverFd < 0) {
+    perror("Cannot create socket");
+    exit(1);
+  }
+  server.sin_family = AF_INET;
+  server.sin_addr.s_addr = inet_addr(server_ip);
+  server.sin_port = htons(port);
+  len = sizeof(server);
+  if (connect(serverFd, (struct sockaddr *)&server, len) < 0) {
+    perror("Cannot connect to server");
+    exit(2);
+  }
+
+  if (write(serverFd, buffer, strlen(buffer)) < 0) {
+    perror("Cannot write");
+    exit(3);
+  }
+  char recv[1024];
+  memset(recv, 0, sizeof(recv));
+  if (read(serverFd, recv, sizeof(recv)) < 0) {
+    perror("cannot read");
+    exit(4);
+  }
+  printf("Received %s from server\n", recv);
+  close(serverFd);
+  return 0;
+}
+```
+
+Here we use a very similar code except that we do not have bind, listen and accept, these are used only in server,
+also we use connect which connects to a remote server, we used the function `inet_addr` to convert an IP address from
+string notation to an int version.
+
+To run the client use these commands:
+
+```
+make
+bin/client
+```
+
+We must run the server in a separate terminal and the client in another one to see the results.
+
+# Push code to github
+
+In a previous article I described how to share your work on github, it can be found [here]({% post_url 2019-02-21-git-startup-guide-part-2 %}), you can
+follow the same instructions here to push your code to github, but before you start make sure to have this file `.gitignore` in your `sockets` directory
+with this content
+
+```
+build
+```
+This makes sure that git will ignore the build directory and not push it to github because this directory contains
+generated files and is dependent on paths on your local machine so it is not right to share it with others.
+
+The source code for this article can be found [here](https://github.com/mohsenSy/echo-server-client)
+
+# Conclusion
+Here we only learned the very basics of sockets in C, in future articles we will learn more advanced topics such as:
+* Processing requests from multiple clients at the same time.
+* Creating a library for network IO stuff, another one for serving multiple requests and another one for parsing messages
+  from different protocols and creating a server for these libraries.
+* Managing the state of our servers
+* Testing the performance of our servers using different ways to process multiple requests and comparing them
+  with real world servers if possible.
+* Securing network communication using encryption.
+
+
+I hope you find the content useful for any comments or questions you can contact me
+on my email address [mohsen47@hotmail.co.uk](mailto:mohsen47@hotmail.co.uk?subject=echo-server-client-using-sockets-in-c)
+
+Stay tuned for more articles. :) :)
