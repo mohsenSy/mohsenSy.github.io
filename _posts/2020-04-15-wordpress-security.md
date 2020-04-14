@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Securing Wordpress setup on Digital Ocean using Firewalls"
-date:   2020-04-02 00:03:00 +0300
+date:   2020-04-15 00:51:00 +0300
 categories: sysadmin
 summary: This article gives advice for securing Wordpress site on Digital Ocean using Firewalls.
 ---
