@@ -81,7 +81,7 @@ wget wordpress.org/latest.tar.gz
 After the file is downloaded we can extract it using this command
 
 ```bash
-tar -zxf later.tar.gz -C /var/www/html
+tar -zxf latest.tar.gz -C /var/www/html
 chown www-data /var/www/html/wordpress
 ```
 

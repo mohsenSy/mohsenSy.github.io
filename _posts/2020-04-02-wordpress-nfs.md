@@ -160,6 +160,7 @@ Now we need to create a new user to be used in FTP using this command
 
 ```bash
 adduser --home /var/www/html/wordpress wp
+chown -R wp:www-data /var/www/html/wordpress/wp-content
 ```
 
 Enter a password for the new user, this will add a new user called wp

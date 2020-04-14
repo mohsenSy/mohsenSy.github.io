@@ -222,6 +222,7 @@ To enable the event MPM use these commands:
 ```bash
 a2dismod mpm_worker
 a2enmod mpm_event
+systemctl restart apache2
 ```
 
 We first disable the worker MPM and then enable event MPM, notice that
