@@ -161,7 +161,7 @@ To use a droplet as a gateway for other droplets in a VPC you need to do the fol
   **BE VERY CAREFULL** with indentation and **DO NOT USE TABS**, as YAML
   files are very sensitive to small errors in indentation.
 
-  If you are using Debina you can make the change permanent by adding
+  If you are using Debian you can make the change permanent by adding
   this line
 
   ```
