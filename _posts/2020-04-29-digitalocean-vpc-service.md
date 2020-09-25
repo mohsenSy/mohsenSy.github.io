@@ -116,7 +116,7 @@ To use a droplet as a gateway for other droplets in a VPC you need to do the fol
   ```
   iptables -t nat -A POSTROUTING -s <vpc_network_prefix> -o <public_interface_name> -j MASQUERADE
   ```
-  The <vpc_network_prefix> can be obtained from the VPC page, and the public interface
+  The `<vpc_network_prefix>` can be obtained from the VPC page, and the public interface
   name is eth0 on Ubuntu droplets, to make sure use `ifconfig` command and search
   for the network interface with a public IP address.
 
@@ -147,7 +147,7 @@ To use a droplet as a gateway for other droplets in a VPC you need to do the fol
   ```
   The private IP of gateway droplet can be found in the droplet's page.
 
-  To persist the change for the gateway, open this file `/etc/netplan/50-cloud-init.yaml`, but first make sure to take backup of it.
+  If you are using Ubutnu open this file `/etc/netplan/50-cloud-init.yaml`, to make routing chage permanent, but first make sure to take backup of it.
 
   Look for the line that syas `gateway4` and comment it with a `#`.
 
@@ -160,6 +160,15 @@ To use a droplet as a gateway for other droplets in a VPC you need to do the fol
   This tells the droplet to use the new gateway every time it boots.
   **BE VERY CAREFULL** with indentation and **DO NOT USE TABS**, as YAML
   files are very sensitive to small errors in indentation.
+
+  If you are using Debina you can make the change permanent by adding
+  this line
+
+  ```
+  post-up ip route change default via <private_IP_of_gateway_Droplet> table main
+  ```
+  To `/etc/network/interfaces` in the section for the private
+  network interface you have, it is probably `eth1`.
 
 
 # Conclusion
