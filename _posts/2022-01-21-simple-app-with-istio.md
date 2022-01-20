@@ -7,7 +7,7 @@ summary: Here we will use istio 1.12 installed in DOKS to run a simple nginx pod
 ---
 
 # Introduction
-In a previous tutorial found [here]({% post_url 2022-01-15-install-istio-1.12-with-terraform %}), we installed istio version 1.12
+In a previous tutorial found [here]({% post_url 2022-01-21-install-istio-1.12-with-terraform %}), we installed istio version 1.12
 using terraform in a Digital Ocean Kubernetes Cluster, today we will continue the work of the previous tutorial
 and use istio gateways and Virtual Services to expose a simple nginx pod using istio service mesh.
 
