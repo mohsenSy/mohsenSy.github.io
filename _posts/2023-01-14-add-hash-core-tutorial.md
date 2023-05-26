@@ -6,9 +6,14 @@ categories: sre
 summary: Here I will present my own tool for managing mono repositories called Hash Core.
 ---
 
+# Note
+
+Hash Core is now called Hash Kern, the name was changed due to another project called hash core found on the web, next
+articles will use the new name.
+
 # Introduction
 
-[Hash Core](https://gitlab.com/hash-platform/core) was developed to be used in managing different kinds of resources
+[Hash Core](https://gitlab.com/hash-platform/hashkern) was developed to be used in managing different kinds of resources
 in a mono repository, you can use YAML files to describe your resources and also your environments then use the CLI
 to build, test, publish, and deploy your resources, it uses the hash of your resource's code and stores it in a state
 storage to be able later to determine which resources have changed and which not, it has many features such as global outputs,
@@ -254,7 +259,7 @@ This was my introduction to Hash Core, this project is still in a testing phase,
 add new ones and test it for bugs and performance, you can find demos for using Hash Core in this [repository](https://gitlab.com/hash-platform/getting-started-demos).
 
 More articles will be published about Hash Core in the next few months, I'm looking forward to your feedback and opinions,
-you can always raise an issue [here](https://gitlab.com/hash-platform/core/issues).
+you can always raise an issue [here](https://gitlab.com/hash-platform/hashkern/issues).
 
 I hope you find the content useful for any comments or questions you can contact me
 on my email address
